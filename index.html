@@ -687,9 +687,127 @@ main {
   main { max-width: 100%; padding: 1rem; }
   .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
 }
+
+/* ── SHARE URL BUTTON & MODAL ── */
+.share-url-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: background 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.share-url-btn:hover { background: #1e5080; transform: scale(1.05); }
+
+.share-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.share-modal-overlay.active { display: flex; }
+
+.share-modal {
+  background: #fff;
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: modalIn 0.3s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.share-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--muted);
+  line-height: 1;
+}
+.share-modal-close:hover { color: var(--ink); }
+.share-modal h2 {
+  font-size: 1.3rem;
+  margin-bottom: 24px;
+  color: var(--ink);
+}
+.share-modal-url {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--accent);
+  word-break: break-all;
+  line-height: 1.3;
+  margin-bottom: 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.share-modal-copy {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  padding: 8px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 28px;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: background 0.2s;
+}
+.share-modal-copy:hover { background: var(--accent); color: #fff; }
+.share-modal-qr {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+.share-modal-qr canvas { border-radius: 12px; }
+.share-modal-hint {
+  margin-top: 16px;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
 </style>
 </head>
 <body>
+
+<!-- ── SHARE URL BUTTON & MODAL ── -->
+<button class="share-url-btn" onclick="document.getElementById('shareModal').classList.add('active')">
+  📎 주소 보여주기
+</button>
+<div class="share-modal-overlay" id="shareModal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div class="share-modal">
+    <button class="share-modal-close" onclick="document.getElementById('shareModal').classList.remove('active')">&times;</button>
+    <h2>아래 주소로 접속하세요</h2>
+    <div class="share-modal-url" id="shareUrl"></div>
+    <button class="share-modal-copy" onclick="navigator.clipboard.writeText(location.href).then(()=>{this.textContent='복사 완료!';setTimeout(()=>this.textContent='주소 복사',1500)})">주소 복사</button>
+    <div class="share-modal-qr"><canvas id="qrCanvas"></canvas></div>
+    <p class="share-modal-hint">QR 코드를 스캔하면 바로 접속할 수 있습니다</p>
+  </div>
+</div>
 
 <!-- ── HERO ── -->
 <header class="hero">
@@ -1472,6 +1590,49 @@ async function submitAll() {
 
   btn.disabled = false;
 }
+
+// ═══ SHARE URL & QR CODE ═══
+(function() {
+  const url = location.href;
+  document.getElementById('shareUrl').textContent = url.replace(/^https?:\/\//, '');
+
+  // Minimal QR Code generator (QR Code Model 2, alphanumeric)
+  function drawQR(canvas, text, size) {
+    // Use a simple API-free QR approach via inline generation
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function() {
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, size, size);
+    };
+    img.onerror = function() {
+      // Fallback: draw URL text if QR fails
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#f5f3ef';
+      ctx.fillRect(0, 0, size, size);
+      ctx.fillStyle = '#1a1a2e';
+      ctx.font = '14px Noto Sans KR';
+      ctx.textAlign = 'center';
+      ctx.fillText('QR 로드 실패', size/2, size/2);
+    };
+    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=' + size + 'x' + size + '&data=' + encodeURIComponent(text) + '&margin=8';
+  }
+
+  // Generate QR when modal opens
+  const modal = document.getElementById('shareModal');
+  let qrGenerated = false;
+  const observer = new MutationObserver(function() {
+    if (modal.classList.contains('active') && !qrGenerated) {
+      drawQR(document.getElementById('qrCanvas'), url, 220);
+      qrGenerated = true;
+    }
+  });
+  observer.observe(modal, { attributes: true, attributeFilter: ['class'] });
+})();
 </script>
 
 </body>
