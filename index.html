@@ -707,6 +707,25 @@ main {
   .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
 }
 
+/* ── CONTENT IMAGES ── */
+.content-img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  display: block;
+  margin: 1rem auto;
+}
+.content-img.wide { max-width: 700px; }
+.content-img.small { max-width: 300px; }
+.img-caption {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
 /* ── SHARE URL BUTTON & MODAL ── */
 .share-url-btn {
   position: absolute;
@@ -985,6 +1004,8 @@ main {
 
     <div class="think-box">
       물결파를 상상해보세요. 물 위에 떠 있는 나뭇잎은 위아래로만 움직이지, 물결을 따라 이동하지 않습니다. 하지만 에너지는 물결을 따라 해안까지 전달됩니다.
+      <img src="images/wave-leaf.jpg" alt="물 위의 나뭇잎 - 파동과 에너지" class="content-img" style="margin-top:1rem;">
+      <div class="img-caption">나뭇잎은 제자리에서 움직이지만, 에너지는 물결을 따라 전달됩니다</div>
     </div>
 
     <div class="inquiry-q">
@@ -1028,6 +1049,11 @@ main {
       </div>
     </div>
 
+    <div class="card">
+      <img src="images/pswave-program.png" alt="P파와 S파 비교 프로그램" class="content-img wide">
+      <div class="img-caption">P파(종파)와 S파(횡파) 시뮬레이션 프로그램 화면</div>
+    </div>
+
     <a href="https://sciencej1.cafe24.com/html5/pswave/pswave.html" target="_blank" class="link-card">
       <span class="icon">🔗</span>
       <div>
@@ -1060,6 +1086,8 @@ main {
         <span class="supply-tag">테이프(표시)</span>
         <span class="supply-tag">(선택) 스마트폰 슬로모션</span>
       </div>
+      <img src="images/slinky-cups.jpg" alt="용수철과 종이컵 실험 세팅" class="content-img wide" style="margin-top:1rem;">
+      <div class="img-caption">용수철 위에 (가)~(바) 위치에 종이컵을 세운 실험 세팅</div>
     </div>
 
     <div class="card">
@@ -1172,6 +1200,11 @@ main {
         <div style="font-size:0.82rem; font-weight:400; color:var(--muted)">웹에서 바로 실행 · 소리 파형을 기록하고 비교</div>
       </div>
     </a>
+
+    <div class="card">
+      <img src="images/sound-analysis.jpg" alt="소리분석 프로그램 화면" class="content-img wide">
+      <div class="img-caption">소리분석 프로그램 화면 - 파형을 기록하고 비교할 수 있습니다</div>
+    </div>
 
     <!-- 실험 A -->
     <div class="card">
@@ -1322,6 +1355,8 @@ main {
     <div class="card">
       <div class="card-title">🎯 실험 목적</div>
       <p>여러 개의 단진자가 하나의 줄에 매달려 있을 때, 특정 진동수로 강제 진동을 주면 고유 진동수가 일치하는 진자만 크게 흔들리는 공명 현상을 관찰한다.</p>
+      <img src="images/pendulum-apparatus.jpg" alt="단진자 공명 실험 장치" class="content-img small" style="margin-top:1rem;">
+      <div class="img-caption">단진자 공명 실험 장치</div>
     </div>
 
     <div class="card">
