@@ -857,7 +857,7 @@ let filteredData = [];
 let selectedFields = new Set();
 let activeClasses = new Set(['all']);
 let currentView = 'group';
-let scriptUrl = localStorage.getItem('dashboard_script_url') || '';
+let scriptUrl = 'https://script.google.com/macros/s/AKfycbxrSQSl4auAnxFO3-UTo_ZbAJp3gtDnlo1mKPCRVCfmBLfUwlYUAoBsr9lrd273MMId/exec';
 
 // ═══════════════════════════════════════════
 // INITIALIZATION
@@ -865,9 +865,6 @@ let scriptUrl = localStorage.getItem('dashboard_script_url') || '';
 document.addEventListener('DOMContentLoaded', () => {
   buildCategoryList();
   updateSelectedCount();
-  if (!scriptUrl) {
-    showUrlConfig();
-  }
 });
 
 function showUrlConfig() {
