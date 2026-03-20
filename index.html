@@ -709,10 +709,10 @@ main {
 
 /* ── SHARE URL BUTTON & MODAL ── */
 .share-url-btn {
-  position: fixed;
+  position: absolute;
   top: 16px;
   right: 16px;
-  z-index: 9999;
+  z-index: 50;
   background: var(--accent);
   color: #fff;
   border: none;
@@ -813,10 +813,7 @@ main {
 </head>
 <body>
 
-<!-- ── SHARE URL BUTTON & MODAL ── -->
-<button class="share-url-btn" onclick="document.getElementById('shareModal').classList.add('active')">
-  📎 주소 보여주기
-</button>
+<!-- ── SHARE MODAL (stays at body level for overlay) ── -->
 <div class="share-modal-overlay" id="shareModal" onclick="if(event.target===this)this.classList.remove('active')">
   <div class="share-modal">
     <button class="share-modal-close" onclick="document.getElementById('shareModal').classList.remove('active')">&times;</button>
@@ -830,6 +827,9 @@ main {
 
 <!-- ── HERO ── -->
 <header class="hero">
+  <button class="share-url-btn" onclick="document.getElementById('shareModal').classList.add('active')">
+    📎 주소 보여주기
+  </button>
   <div class="hero-content">
     <div class="hero-badge">5조 · 융합과제 해결 가이드북</div>
     <h1>빛과 소리의 캔버스:<br><span>소실점에서 공명까지</span></h1>
