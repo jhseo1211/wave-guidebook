@@ -1637,6 +1637,14 @@ async function submitAll() {
     });
     status.textContent = '✅ 제출 완료! 교사에게 전송되었습니다.';
     status.className = 'submit-status success';
+    // 모든 입력 초기화
+    document.querySelectorAll('[data-field]').forEach(el => el.value = '');
+    document.getElementById('studentName').value = '';
+    document.getElementById('studentClass').value = '';
+    document.getElementById('studentNum').value = '';
+    clearCanvas('drawCanvas1');
+    clearCanvas('drawCanvas2');
+    localStorage.removeItem('wave_guide_data');
   } catch (err) {
     status.textContent = '❌ 제출 실패. 네트워크를 확인해주세요.';
     status.className = 'submit-status error';
